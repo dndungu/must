@@ -4,25 +4,53 @@ A tiny Golang package that will print to os.Stdout and exit(0) when certain cond
 ## must.BeNil
 ```go
 
-result, err := DoSomething(value)
+result, err := DoSomething()
+
 must.BeNil(err)
 
-// would be equivalent to
+// is functionally equivalent to
 
-result, err := DoSomething(value)
+import "log"
+
+result, err := DoSomething()
 if err != nil {
-  log.Fatal(err.Error())
+	log.Fatal(err.Error())
 }
 ```
 
 ## must.GetEnv
 ```go
- value := must.GetEnv("ENV_VARIABLE")
+key := "ENV_VARIABLE"
 
- // would be equivalent to
+value := must.GetEnv(key)
 
- value, ok := os.LookupEnv("ENV_VARIABLE")
- if !ok {
-   log.Fatal(fmt.Sprintf("Error, environment variable %s is not set.", key))
- }
+// is functionally equivalent to
+
+import "log"
+
+value, ok := os.LookupEnv(key)
+if !ok {
+	log.Fatal(fmt.Sprintf("Error, environment variable %s is not set.", key))
+}
+```
+
+## must.ReadFile
+```go
+path := "/secrets/MY_TOKEN"
+
+value := must.ReadFile(path)
+
+// is functionally equivalent to
+
+import (
+	"io/ioutil"
+	"log"
+	"strings"
+)
+
+b, err := ioutil.ReadFile(path)
+if err != nil {
+	log.Fatal(err.Error())
+}
+value := strings.TrimSpace(string(b))
 ```
